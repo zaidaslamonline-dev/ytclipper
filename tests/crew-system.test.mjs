@@ -68,3 +68,50 @@ test('corrupt or unavailable storage never crashes the game', () => {
   assert.equal(persistSave(blocked, createInitialSave()), false);
   assert.equal(persistSave(memoryStorage(), { version: 99 }), false);
 });
+
+
+test('crew combat assists unlock at trusted relationships and have distinct roles', () => {
+  const save = createInitialSave();
+  assert.equal(getCrewAssist('milo', save.crew.milo, 0), null);
+  save.crew.milo.trust = 60;
+  save.crew.ria.trust = 60;
+  save.crew.bo.trust = 60;
+  const milo = getCrewAssist('milo', save.crew.milo, 0);
+  const ria = getCrewAssist('ria', save.crew.ria, 0);
+  const bo = getCrewAssist('bo', save.crew.bo, 0);
+  assert.equal(milo.ready, true);
+  assert.equal(milo.kind, 'mark');
+  assert.equal(ria.kind, 'jam');
+  assert.equal(ria.heal, 12);
+  assert.equal(bo.kind, 'rush');
+  assert.ok(bo.knockback > ria.knockback);
+});
+
+test('crew assist writes a persistent memory and enforces its cooldown', () => {
+  const storage = memoryStorage();
+  const save = createInitialSave();
+  save.crew.ria.trust = 68;
+  const result = recordCrewAssist(save, 'ria', 42);
+  assert.equal(result.ok, true);
+  assert.equal(save.crew.ria.lastAssistAt, 42);
+  assert.equal(save.crew.ria.lastMemory, 'assist');
+  assert.equal(save.crew.ria.interactions, 1);
+  assert.match(getCrewDialogue('ria', save.crew.ria).greeting, /cut the noise/);
+  assert.equal(getCrewAssist('ria', save.crew.ria, 59).ready, false);
+  assert.equal(recordCrewAssist(save, 'ria', 59).reason, 'cooldown');
+  assert.equal(getCrewAssist('ria', save.crew.ria, 60).ready, true);
+  assert.equal(persistSave(storage, save), true);
+  const loaded = loadSave(storage);
+  assert.equal(loaded.crew.ria.lastAssistAt, 42);
+  assert.equal(loaded.crew.ria.memories.at(-1).tag, 'assist');
+});
+
+test('legacy checkpoints gain a null assist cooldown without losing old data', () => {
+  const legacy = createInitialSave();
+  delete legacy.crew.bo.lastAssistAt;
+  const storage = memoryStorage();
+  storage.setItem(SAVE_KEY, JSON.stringify(legacy));
+  const loaded = loadSave(storage);
+  assert.equal(loaded.crew.bo.lastAssistAt, null);
+  assert.equal(loaded.crew.bo.trust, 50);
+});
