@@ -119,12 +119,13 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 import { CREW_ASSISTS, CREW_PROFILES, createInitialSave, getCrewAssist, getCrewDialogue, getRelationshipLabel, getRoutineTarget, loadSave, persistSave, recordCrewAssist, recordCrewChoice } from './crew-system.mjs';
 import { getCrewComboOptions, recordCrewCombo } from './crew-combos.mjs';
 import { ENEMY_TACTIC_PROFILES, advanceEnemyTactics, createEnemyTacticState, getEnemyTacticalTarget, getEnemyTelegraphProgress } from './enemy-tactics.mjs';
+import { createEnemySquadState, chooseSquadAttackPermit, recordEnemySquadEvents } from './enemy-squad-director.mjs';
 import { CITY_DISTRICTS, SIGNAL_CLUES, collectSignalClue, createInitialCityProgress, getSignalMissionSummary, loadCityProgress, persistCityProgress, resolveSignalCase } from './city-map.mjs';
 const $=id=>document.getElementById(id);
 const storage=(()=>{try{return window.localStorage;}catch{return null;}})();
 let saveState=loadSave(storage)||createInitialSave();
 let cityProgress=loadCityProgress(storage)||createInitialCityProgress();
-let playerName=saveState.playerName||'New Yorker',scene,camera,renderer,player,clock,keys={},yaw=saveState.player.yaw||0,worldReady=false,moveTouch={},enemies=[],crewMembers=[],signalNodes=[],playerHealth=saveState.player.health??100,blocking=false,jumpVelocity=0,attackCooldown=0,enemyClock=0,cityTime=saveState.cityTime||0,saveClock=0,nearbyCrewId=null,nearbyClueId=null,activeCrewId=null,mapOpen=false,endingOpen=false;
+let playerName=saveState.playerName||'New Yorker',scene,camera,renderer,player,clock,keys={},yaw=saveState.player.yaw||0,worldReady=false,moveTouch={},enemies=[],crewMembers=[],signalNodes=[],enemySquadState=createEnemySquadState(),playerHealth=saveState.player.health??100,blocking=false,jumpVelocity=0,attackCooldown=0,enemyClock=0,cityTime=saveState.cityTime||0,saveClock=0,nearbyCrewId=null,nearbyClueId=null,activeCrewId=null,mapOpen=false,endingOpen=false;
 $('characterName').addEventListener('input',e=>{$('playButton').textContent='▶ Play as '+(e.target.value.trim()||'New Yorker');});
 function updateContinueButton(){const saved=loadSave(storage);const button=$('continueButton');if(saved){button.hidden=false;button.textContent='↻ Continue · '+saved.playerName;}else button.hidden=true;}
 function startGame(useSaved=false){if(useSaved){saveState=loadSave(storage)||createInitialSave();cityProgress=loadCityProgress(storage)||createInitialCityProgress();playerName=saveState.playerName;}else{const existing=loadSave(storage);if(existing&&!window.confirm('Start a new timeline? Your current checkpoint will be replaced.'))return;playerName=$('characterName').value.trim().slice(0,22)||'New Yorker';saveState=createInitialSave(playerName);cityProgress=createInitialCityProgress();persistSave(storage,saveState);persistCityProgress(storage,cityProgress);} $('profileName').textContent=playerName;$('hudName').textContent=playerName;$('home').style.display='none';$('world').classList.add('active');if(!worldReady)initWorld();else{restoreSaveToWorld();resize();}updateCrewSummary();}
@@ -204,7 +205,7 @@ function makeFighter(x,z,shirt,skinTone,role,side){
  const tactics=createEnemyTacticState(role,side),profile=ENEMY_TACTIC_PROFILES[role];
  const telegraphMaterial=new THREE.MeshBasicMaterial({color:profile.color,transparent:true,opacity:.2,depthWrite:false});
  const telegraphRing=new THREE.Mesh(new THREE.TorusGeometry(.78,.055,8,32),telegraphMaterial);telegraphRing.rotation.x=Math.PI/2;telegraphRing.position.y=.075;telegraphRing.visible=false;g.add(telegraphRing);
- g.position.set(x,0,z);g.userData={hp:100,flash:0,assistFlash:0,stun:0,knockback:new THREE.Vector3(),group:g,home:new THREE.Vector3(x,0,z),tactics,telegraphRing};
+ g.position.set(x,0,z);g.userData={hp:100,flash:0,assistFlash:0,stun:0,knockback:new THREE.Vector3(),group:g,home:new THREE.Vector3(x,0,z),tactics,squadId:role,telegraphRing};
  scene.add(g);enemies.push(g);return g;
 }
 makeFighter(-2.8,1,0xb64b4b,0xb77e62,'breacher',-1);
@@ -262,6 +263,7 @@ function triggerCrewCombo(){
 
 function animate(){requestAnimationFrame(animate);if(!$('world').classList.contains('active'))return;const dt=Math.min(clock.getDelta(),.04);for(const node of signalNodes){if(node.visible){node.userData.phase+=dt;node.userData.core.position.y=.92+Math.sin(node.userData.phase*2.2)*.11;node.userData.ring.rotation.z+=dt*.48;}}if(!activeCrewId&&!mapOpen&&!endingOpen)updateCrew(dt);updateComboButton();saveClock+=dt;if(saveClock>=12){saveClock=0;saveGame('autosave');}if(activeCrewId||mapOpen||endingOpen){renderer.render(scene,camera);return;}attackCooldown=Math.max(0,attackCooldown-dt);const sx=moveTouch.x||0,sy=moveTouch.y||0;const f=keys.w||keys.arrowup||moveTouch.forward||sy<-.2,b=keys.s||keys.arrowdown||moveTouch.back||sy>.2,l=keys.a||keys.arrowleft||moveTouch.left||sx<-.2,r=keys.d||keys.arrowright||moveTouch.right||sx>.2;const speed=10*dt;const forward=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));const right=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));if(f)player.position.addScaledVector(forward,speed*Math.max(.45,Math.min(1,Math.abs(sy)||1)));if(b)player.position.addScaledVector(forward,-speed*Math.max(.45,Math.min(1,Math.abs(sy)||1)));if(l)player.position.addScaledVector(right,-speed*Math.max(.45,Math.min(1,Math.abs(sx)||1)));if(r)player.position.addScaledVector(right,speed*Math.max(.45,Math.min(1,Math.abs(sx)||1)));
 if(jumpVelocity||player.position.y>.001){player.position.y=Math.max(0,player.position.y+jumpVelocity*dt);jumpVelocity-=19*dt;if(player.position.y===0)jumpVelocity=0;}
+const squadDecision=chooseSquadAttackPermit(enemySquadState,enemies.map(enemy=>{const tactics=enemy.userData.tactics;return{id:enemy.userData.squadId,role:tactics.role,phase:tactics.phase,cooldown:tactics.cooldown,distance:Math.hypot(player.position.x-enemy.position.x,player.position.z-enemy.position.z),hp:enemy.userData.hp,stun:enemy.userData.stun,visible:enemy.visible};}));enemySquadState=squadDecision.state;
 for(const enemy of enemies){
  if(enemy.userData.hp<=0){enemy.visible=false;enemy.userData.telegraphRing.visible=false;continue;}
  enemy.userData.stun=Math.max(0,(enemy.userData.stun||0)-dt);
@@ -270,8 +272,8 @@ for(const enemy of enemies){
  const pursuit=new THREE.Vector3(target.x-enemy.position.x,0,target.z-enemy.position.z),pursuitDistance=pursuit.length();
  if(enemy.userData.stun<=0&&tactics.phase!=='telegraph'&&pursuitDistance>.2){pursuit.normalize();enemy.position.addScaledVector(pursuit,dt*profile.speed);enemy.rotation.y=Math.atan2(pursuit.x,pursuit.z);}
  const planarDistance=Math.hypot(player.position.x-enemy.position.x,player.position.z-enemy.position.z);
- const tick=advanceEnemyTactics(tactics,{distance:planarDistance,blocking,airborne:player.position.y>.35,interrupted:enemy.userData.stun>0},dt);
- enemy.userData.tactics=tick.state;
+ const tick=advanceEnemyTactics(tactics,{distance:planarDistance,blocking,airborne:player.position.y>.35,interrupted:enemy.userData.stun>0,allowAttack:squadDecision.permitId===enemy.userData.squadId},dt);
+ enemy.userData.tactics=tick.state;enemySquadState=recordEnemySquadEvents(enemySquadState,enemy.userData.squadId,tick.events);
  const ring=enemy.userData.telegraphRing,progress=getEnemyTelegraphProgress(tick.state);ring.visible=tick.state.phase==='telegraph';
  if(ring.visible){ring.rotation.z+=dt*(tick.state.role==='flanker'?2.7:1.8);ring.scale.setScalar(.78+progress*.42);ring.material.opacity=.2+progress*.68;}
  for(const event of tick.events){

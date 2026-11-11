@@ -26,7 +26,7 @@ export function advanceEnemyTactics(currentState,input={},deltaSeconds=0){
  state.cooldown=Math.max(0,state.cooldown-dt);
  if(state.phase==='telegraph'&&input.interrupted){state.phase='recover';state.phaseTimer=profile.recovery;state.cooldown=Math.max(state.cooldown,profile.cooldown);events.push('interrupted');return{state,events};}
  if(input.interrupted)return{state,events};
- if(state.phase==='approach'){if(distance<=profile.approachRange&&state.cooldown<=0){state.phase='telegraph';state.phaseTimer=profile.windup;events.push('telegraph-start');}return{state,events};}
+ if(state.phase==='approach'){if(distance<=profile.approachRange&&state.cooldown<=0&&input.allowAttack!==false){state.phase='telegraph';state.phaseTimer=profile.windup;events.push('telegraph-start');}return{state,events};}
  if(state.phase==='telegraph'){
   if(input.airborne||distance>profile.attackRange+.35){state.phase='recover';state.phaseTimer=profile.recovery;state.cooldown=Math.max(state.cooldown,profile.cooldown);events.push('missed');return{state,events};}
   state.phaseTimer=Math.max(0,state.phaseTimer-dt);
