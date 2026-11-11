@@ -225,7 +225,7 @@ function updateComboButton(){
  button.hidden=!!(activeCrewId||mapOpen||endingOpen||playerHealth<=0);
 }
 function triggerCrewCombo(){
- if(!player||playerHealth<=0)return;
+ if(!player||playerHealth<=0||activeCrewId||mapOpen||endingOpen)return;
  const combo=getNearbyReadyCombo();
  if(!combo){$('fightMessage').textContent='NEED TWO TRUSTED ALLIES NEARBY FOR A DUO COMBO';updateComboButton();return;}
  const targets=enemies.filter(enemy=>enemy.visible&&enemy.userData.hp>0).map(enemy=>({enemy,distance:player.position.distanceTo(enemy.position)})).filter(item=>item.distance<=8.5).sort((a,b)=>a.distance-b.distance);
