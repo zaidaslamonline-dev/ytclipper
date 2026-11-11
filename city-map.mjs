@@ -1,12 +1,12 @@
 export const CITY_PROGRESS_KEY = 'stickcity-city-progress-v1';
 export const CITY_DISTRICTS = Object.freeze([
   Object.freeze({ id: 'midtown', name: 'Midtown Hub', detail: 'Corner Diner · crew meetup', x: 0, z: 10, pinX: 50, pinY: 14, icon: '🏙️' }),
-  Object.freeze({ id: 'transit', name: 'Transit Plaza', detail: 'Subway relays · first signal trace', x: -4, z: -20, pinX: 25, pinY: 39, icon: '🚇' }),
+  Object.freeze({ id: 'transit', name: 'Transit Plaza', detail: 'Subway relays · first signal trace', x: 0, z: -28, pinX: 25, pinY: 39, icon: '🚇' }),
   Object.freeze({ id: 'riverside', name: 'Riverside Walk', detail: 'Waterfront service path · second trace', x: 4, z: -44, pinX: 75, pinY: 65, icon: '🌉' }),
   Object.freeze({ id: 'signal', name: 'Signal Exchange', detail: 'Old broadcast mast · final trace', x: 0, z: -64, pinX: 50, pinY: 88, icon: '📡' })
 ]);
 export const SIGNAL_CLUES = Object.freeze([
-  Object.freeze({ id: 'subway-relay', districtId: 'transit', label: 'Subway relay', description: 'A maintenance relay is repeating a burst that should not exist.', x: -1.5, z: -20, color: 0x4fd5e8 }),
+  Object.freeze({ id: 'subway-relay', districtId: 'transit', label: 'Subway relay', description: 'A maintenance relay is repeating a burst that should not exist.', x: 2.5, z: -28, color: 0x4fd5e8 }),
   Object.freeze({ id: 'river-echo', districtId: 'riverside', label: 'River echo', description: 'A waterfront receiver caught the same signal beneath the bridge.', x: 6.5, z: -44, color: 0x65e2b1 }),
   Object.freeze({ id: 'roofline-key', districtId: 'signal', label: 'Roofline key', description: 'The old broadcast mast contains the missing encryption key.', x: 2.5, z: -64, color: 0xf3c45f })
 ]);

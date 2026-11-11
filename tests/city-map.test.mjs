@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CITY_DISTRICTS, CITY_PROGRESS_KEY, SIGNAL_CLUES, collectSignalClue, createInitialCityProgress, getSignalMissionSummary, loadCityProgress, normalizeCityProgress, persistCityProgress, resolveSignalCase } from '../city-map.mjs';
-import { createInitialSave, getCrewDialogue } from '../crew-system.mjs';
+import { CREW_PROFILES, createInitialSave, getCrewDialogue } from '../crew-system.mjs';
 function memoryStorage() {
   const values = new Map();
   return { getItem(key) { return values.has(key) ? values.get(key) : null; }, setItem(key, value) { values.set(key, String(value)); }, values };
@@ -10,6 +10,17 @@ test('city map exposes four playable destinations and three evidence locations',
   assert.equal(CITY_DISTRICTS.length, 4); assert.equal(SIGNAL_CLUES.length, 3);
   for (const district of CITY_DISTRICTS) { assert.ok(district.x >= -7 && district.x <= 7); assert.ok(district.z >= -70 && district.z <= 70); }
 });
+test('fast-travel arrival leaves each signal beacon as the nearest interaction', () => {
+  for (const clue of SIGNAL_CLUES) {
+    const district = CITY_DISTRICTS.find(item => item.id === clue.districtId);
+    const clueDistance = Math.hypot(district.x - clue.x, district.z - clue.z);
+    const nearestCrew = Object.values(CREW_PROFILES).flatMap(profile => profile.routine)
+      .reduce((best, stop) => Math.min(best, Math.hypot(district.x - stop.x, district.z - stop.z)), Infinity);
+    assert.ok(clueDistance < 3.35);
+    assert.ok(clueDistance < nearestCrew, clue.id + ' should not be blocked by an NPC interaction');
+  }
+});
+
 test('evidence collection is unique and completes only after all three traces', () => {
   let progress = createInitialCityProgress();
   for (const clue of SIGNAL_CLUES.slice(0, 2)) { const result = collectSignalClue(progress, clue.id); assert.equal(result.ok, true); assert.equal(result.complete, false); progress = result.progress; }
