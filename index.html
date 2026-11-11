@@ -176,7 +176,7 @@ function openCrewDialogue(){
  const profile=CREW_PROFILES[activeCrewId],dialogue=getCrewDialogue(activeCrewId,saveState.crew[activeCrewId]);
  const member=crewMembers.find(item=>item.userData.id===activeCrewId),life=getCrewLifeState(activeCrewId,cityTime);
  const distance=member&&player?Math.hypot(player.position.x-member.position.x,player.position.z-member.position.z):Infinity;
- const currentActivity=distance>.72?'WALKING TO '+life.place.toUpperCase():life.activityDescription.toUpperCase();
+ const currentActivity=distance>.72?'PAUSED TO TALK · ROUTE TO '+life.place.toUpperCase():life.activityDescription.toUpperCase();
  $('dialogueName').textContent=profile.name;$('dialogueRole').textContent=profile.role;$('dialogueText').textContent=dialogue.greeting;
  $('dialogueActivity').textContent='NOW · '+currentActivity+'  /  NEXT · '+life.nextPlace.toUpperCase()+' IN '+life.secondsUntilNext+'s';
  $('dialogueMemory').textContent=dialogue.memoryLine;$('dialogueBond').textContent=dialogue.relationship+' · '+dialogue.trust+'/100';
