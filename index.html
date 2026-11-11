@@ -49,6 +49,7 @@
 .dialogue-kicker{color:#e5bb61;font-size:10px;font-weight:1000;letter-spacing:.16em;text-transform:uppercase}
 .dialogue-panel h2{margin:3px 0 0;font-size:23px;line-height:1.1;color:#f4f7ff}
 .dialogue-panel p{margin:12px 0;color:#d5e0f1;font-size:13px;line-height:1.5}
+.dialogue-activity{margin:-3px 0 12px;padding:8px 10px;border:1px solid #e5bb6133;border-radius:9px;background:#e5bb610d;color:#f1d48d;font-size:9px;font-weight:1000;letter-spacing:.08em;line-height:1.55}
 .dialogue-close{width:30px;height:30px;border:1px solid #ffffff44;border-radius:9px;background:#ffffff12;color:#fff;font-size:20px;line-height:1;cursor:pointer}
 .dialogue-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 0 11px;color:#a7bad5;font-size:9px;font-weight:900;letter-spacing:.08em}
 .dialogue-meta strong{color:#e6c16f}
@@ -103,7 +104,7 @@
 <div class="card"><h2>City rules</h2><p class="sub">This is an original superhero-inspired New York. Familiar comic-book atmosphere, original characters, stories and designs.</p></div>
 </aside></div><div class="foot">STICKCITY · A living city prototype · Progress and exploration will grow as your story does.</div>
 </main>
-<section id="world" aria-label="3D city game"><div class="world-top"><div><div class="world-title">STICKCITY / MIDTOWN DISTRICT</div><div class="world-hint">Explore the streets. Build trust to unlock crew assists.</div></div><div class="world-actions"><span id="saveStatus">AUTOSAVE READY</span><button class="world-save" id="mapButton">CITY MAP</button><button class="world-save" id="saveButton">SAVE</button><button class="world-back" id="backButton">← LIFE MENU</button></div></div><div class="world-note" id="worldMessage">WASD / ARROWS to move · Drag to look around</div><div class="combat-hud" role="status" aria-live="polite"><b id="healthLabel">YOUR HEALTH · 100%</b><div class="health-track"><div class="health-fill" id="healthFill"></div></div></div><div id="fightMessage" role="status" aria-live="polite">Two troublemakers are watching the block.</div><canvas id="gameCanvas"></canvas><div class="hud"><div class="hud-card"><b id="hudName">New Yorker</b><span>DAY 01 · 09:41 PM · MIDTOWN</span><small id="crewStatus">MILO 50 · RIA 50 · BO 50</small></div><div class="controls"><button data-move="forward" aria-label="Move forward">↑</button><button data-move="left" aria-label="Move left">←</button><button data-move="back" aria-label="Move backward">↓</button><button data-move="right" aria-label="Move right">→</button></div></div><div class="interaction-prompt" id="interactionPrompt"></div><button class="talk-button" id="talkButton" hidden>◉ TALK</button><section class="dialogue-panel" id="dialoguePanel" aria-label="Crew conversation" aria-live="polite"><div class="dialogue-top"><div><div class="dialogue-kicker" id="dialogueRole">CREW MEMBER</div><h2 id="dialogueName">Milo</h2></div><button class="dialogue-close" id="dialogueClose" aria-label="Close conversation">×</button></div><p id="dialogueText"></p><div class="dialogue-meta"><span id="dialogueMemory">NO SHARED HISTORY YET</span><strong id="dialogueBond">FRIENDS · 50/100</strong></div><div id="dialogueChoices" class="dialogue-choices"></div></section><section class="city-map-panel" id="mapPanel" aria-label="City map" aria-hidden="true">
+<section id="world" aria-label="3D city game"><div class="world-top"><div><div class="world-title">STICKCITY / MIDTOWN DISTRICT</div><div class="world-hint">Explore the streets. Build trust to unlock crew assists.</div></div><div class="world-actions"><span id="saveStatus">AUTOSAVE READY</span><button class="world-save" id="mapButton">CITY MAP</button><button class="world-save" id="saveButton">SAVE</button><button class="world-back" id="backButton">← LIFE MENU</button></div></div><div class="world-note" id="worldMessage">WASD / ARROWS to move · Drag to look around</div><div class="combat-hud" role="status" aria-live="polite"><b id="healthLabel">YOUR HEALTH · 100%</b><div class="health-track"><div class="health-fill" id="healthFill"></div></div></div><div id="fightMessage" role="status" aria-live="polite">Two troublemakers are watching the block.</div><canvas id="gameCanvas"></canvas><div class="hud"><div class="hud-card"><b id="hudName">New Yorker</b><span>DAY 01 · 09:41 PM · MIDTOWN</span><small id="crewStatus">MILO 50 · RIA 50 · BO 50</small></div><div class="controls"><button data-move="forward" aria-label="Move forward">↑</button><button data-move="left" aria-label="Move left">←</button><button data-move="back" aria-label="Move backward">↓</button><button data-move="right" aria-label="Move right">→</button></div></div><div class="interaction-prompt" id="interactionPrompt"></div><button class="talk-button" id="talkButton" hidden>◉ TALK</button><section class="dialogue-panel" id="dialoguePanel" aria-label="Crew conversation" aria-live="polite"><div class="dialogue-top"><div><div class="dialogue-kicker" id="dialogueRole">CREW MEMBER</div><h2 id="dialogueName">Milo</h2></div><button class="dialogue-close" id="dialogueClose" aria-label="Close conversation">×</button></div><p id="dialogueText"></p><div class="dialogue-activity" id="dialogueActivity">CURRENTLY · CHECKING THE BLOCK</div><div class="dialogue-meta"><span id="dialogueMemory">NO SHARED HISTORY YET</span><strong id="dialogueBond">FRIENDS · 50/100</strong></div><div id="dialogueChoices" class="dialogue-choices"></div></section><section class="city-map-panel" id="mapPanel" aria-label="City map" aria-hidden="true">
 <div class="map-header"><div><div class="map-kicker">MANHATTAN / FIELD GUIDE</div><h2>Choose your next block</h2></div><button class="map-close" id="mapClose" aria-label="Close city map">×</button></div>
 <div class="map-mission" id="mapMissionSummary">SIGNAL CASE · 0/3 TRACES SECURED</div>
 <div class="district-map" id="districtMap"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M50 14 L25 39 L75 65 L50 88" fill="none" stroke="#e8c36d" stroke-width="1.8" stroke-dasharray="3 2" opacity=".9"/></svg><div class="map-pins" id="mapPins"></div></div>
@@ -117,6 +118,7 @@
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { CREW_ASSISTS, CREW_PROFILES, createInitialSave, getCrewAssist, getCrewDialogue, getRelationshipLabel, getRoutineTarget, loadSave, persistSave, recordCrewAssist, recordCrewChoice } from './crew-system.mjs';
+import { getCrewLifeState } from './crew-life.mjs';
 import { getCrewComboOptions, recordCrewCombo } from './crew-combos.mjs';
 import { ENEMY_TACTIC_PROFILES, advanceEnemyTactics, createEnemyTacticState, getEnemyTacticalTarget, getEnemyTelegraphProgress } from './enemy-tactics.mjs';
 import { createEnemySquadState, chooseSquadAttackPermit, recordEnemySquadEvents } from './enemy-squad-director.mjs';
@@ -168,7 +170,25 @@ function captureSave(){saveState.playerName=playerName;if(player){saveState.play
 function saveGame(reason='manual'){if(!worldReady)return false;captureSave();const saveOk=persistSave(storage,saveState),storyOk=persistCityProgress(storage,cityProgress),ok=saveOk&&storyOk;$('saveStatus').textContent=ok?reason.toUpperCase()+' · SAVED':'LOCAL SAVE UNAVAILABLE';updateContinueButton();return ok;}
 function restoreSaveToWorld(){if(player&&saveState.player){player.position.set(saveState.player.x,0,saveState.player.z);playerHealth=saveState.player.health;yaw=saveState.player.yaw;}cityTime=saveState.cityTime||0;for(const member of crewMembers){const target=getRoutineTarget(member.userData.id,cityTime);if(target)member.position.set(target.x,0,target.z);}for(const node of signalNodes)node.visible=!cityProgress.clues.includes(node.userData.id);updateCrewSummary();updateNearbyCrew();}
 function updateNearbyCrew(){if(!player||activeCrewId||mapOpen||endingOpen)return;let closestCrew=null,crewDistance=4.15;for(const member of crewMembers){const distance=player.position.distanceTo(member.position);if(distance<crewDistance){crewDistance=distance;closestCrew=member.userData.id;}}let closestClue=null,clueDistance=3.35;for(const node of signalNodes){if(!node.visible)continue;const dx=player.position.x-node.position.x,dz=player.position.z-node.position.z,distance=Math.hypot(dx,dz);if(distance<clueDistance){clueDistance=distance;closestClue=node.userData.id;}}nearbyCrewId=null;nearbyClueId=null;const prompt=$('interactionPrompt'),button=$('talkButton');if(closestClue&&clueDistance<=crewDistance){nearbyClueId=closestClue;const clue=SIGNAL_CLUES.find(item=>item.id===closestClue);prompt.textContent='PRESS E / SCAN '+clue.label.toUpperCase();button.textContent='⌁ SCAN';prompt.classList.add('visible');button.hidden=false;button.classList.add('visible');}else if(closestCrew){nearbyCrewId=closestCrew;prompt.textContent='PRESS E / TALK TO '+CREW_PROFILES[closestCrew].name.toUpperCase();button.textContent='◉ TALK';prompt.classList.add('visible');button.hidden=false;button.classList.add('visible');}else{prompt.classList.remove('visible');button.hidden=true;button.classList.remove('visible');}}
-function openCrewDialogue(){if(!nearbyCrewId||activeCrewId)return;nearbyClueId=null;activeCrewId=nearbyCrewId;const profile=CREW_PROFILES[activeCrewId],dialogue=getCrewDialogue(activeCrewId,saveState.crew[activeCrewId]);$('dialogueName').textContent=profile.name;$('dialogueRole').textContent=profile.role;$('dialogueText').textContent=dialogue.greeting;$('dialogueMemory').textContent=dialogue.memoryLine;$('dialogueBond').textContent=dialogue.relationship+' · '+dialogue.trust+'/100';const container=$('dialogueChoices');container.innerHTML='';for(const choice of dialogue.choices){const button=document.createElement('button');button.type='button';button.className='dialogue-choice';const title=document.createElement('strong');title.textContent=choice.label;const hint=document.createElement('small');hint.textContent=choice.hint;button.append(title,hint);button.addEventListener('click',()=>chooseCrewResponse(choice.id));container.append(button);}$('dialoguePanel').classList.add('active');$('interactionPrompt').classList.remove('visible');$('talkButton').hidden=true;}
+function openCrewDialogue(){
+ if(!nearbyCrewId||activeCrewId)return;
+ nearbyClueId=null;activeCrewId=nearbyCrewId;
+ const profile=CREW_PROFILES[activeCrewId],dialogue=getCrewDialogue(activeCrewId,saveState.crew[activeCrewId]);
+ const member=crewMembers.find(item=>item.userData.id===activeCrewId),life=getCrewLifeState(activeCrewId,cityTime);
+ const distance=member&&player?Math.hypot(player.position.x-member.position.x,player.position.z-member.position.z):Infinity;
+ const currentActivity=distance>.72?'WALKING TO '+life.place.toUpperCase():life.activityDescription.toUpperCase();
+ $('dialogueName').textContent=profile.name;$('dialogueRole').textContent=profile.role;$('dialogueText').textContent=dialogue.greeting;
+ $('dialogueActivity').textContent='NOW · '+currentActivity+'  /  NEXT · '+life.nextPlace.toUpperCase()+' IN '+life.secondsUntilNext+'s';
+ $('dialogueMemory').textContent=dialogue.memoryLine;$('dialogueBond').textContent=dialogue.relationship+' · '+dialogue.trust+'/100';
+ const container=$('dialogueChoices');container.innerHTML='';
+ for(const choice of dialogue.choices){
+  const button=document.createElement('button');button.type='button';button.className='dialogue-choice';
+  const title=document.createElement('strong');title.textContent=choice.label;
+  const hint=document.createElement('small');hint.textContent=choice.hint;
+  button.append(title,hint);button.addEventListener('click',()=>chooseCrewResponse(choice.id));container.append(button);
+ }
+ $('dialoguePanel').classList.add('active');$('interactionPrompt').classList.remove('visible');$('talkButton').hidden=true;
+}
 function chooseCrewResponse(choiceId){if(!activeCrewId)return;const result=recordCrewChoice(saveState,activeCrewId,choiceId);if(!result.ok)return;$('dialogueText').textContent=result.reply;$('dialogueMemory').textContent='MEMORY SAVED · '+result.memoryLabel.toUpperCase();$('dialogueBond').textContent=result.relationship+' · '+result.trust+'/100';const container=$('dialogueChoices');container.innerHTML='';const button=document.createElement('button');button.type='button';button.className='dialogue-choice';button.textContent='Back to the street';button.addEventListener('click',closeCrewDialogue);container.append(button);updateCrewSummary();saveGame('conversation');}
 function closeCrewDialogue(){$('dialoguePanel').classList.remove('active');activeCrewId=null;updateNearbyCrew();}
 
@@ -183,7 +203,7 @@ function createCrewMember(id){
  const makePivot=(x,y,length,material,radius)=>{const pivot=new THREE.Group();pivot.position.set(x,y,0);const limb=new THREE.Mesh(new THREE.CylinderGeometry(radius,radius,length,8),material);limb.position.y=-length/2;pivot.add(limb);group.add(pivot);return pivot;};
  const leftArm=makePivot(-.31,1.75,.62,skinMat,.07),rightArm=makePivot(.31,1.75,.62,skinMat,.07);
  const leftLeg=makePivot(-.14,1.05,.72,pantsMat,.08),rightLeg=makePivot(.14,1.05,.72,pantsMat,.08);
- const ability=CREW_ASSISTS[id],haloMaterial=new THREE.MeshStandardMaterial({color:ability.color,emissive:ability.color,emissiveIntensity:1.1,transparent:true,opacity:.9}),assistHalo=new THREE.Mesh(new THREE.TorusGeometry(.62,.045,8,28),haloMaterial);assistHalo.rotation.x=Math.PI/2;assistHalo.position.y=.16;assistHalo.visible=false;group.add(assistHalo);const route=profile.routine[0];group.position.set(route.x,0,route.z);group.userData={id,leftArm,rightArm,leftLeg,rightLeg,assistHalo,assistFlash:0,phase:Math.random()*Math.PI*2};
+ const ability=CREW_ASSISTS[id],haloMaterial=new THREE.MeshStandardMaterial({color:ability.color,emissive:ability.color,emissiveIntensity:1.1,transparent:true,opacity:.9}),assistHalo=new THREE.Mesh(new THREE.TorusGeometry(.62,.045,8,28),haloMaterial);assistHalo.rotation.x=Math.PI/2;assistHalo.position.y=.16;assistHalo.visible=false;group.add(assistHalo);const route=profile.routine[0];group.position.set(route.x,0,route.z);group.userData={id,head,torso,leftArm,rightArm,leftLeg,rightLeg,assistHalo,assistFlash:0,phase:Math.random()*Math.PI*2};
  group.traverse(part=>{if(part.isMesh){part.castShadow=true;part.receiveShadow=true;}});scene.add(group);crewMembers.push(group);
 }
 
@@ -214,7 +234,76 @@ restoreSaveToWorld();
 resize();window.addEventListener('resize',resize);canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);moveTouch.drag=true;moveTouch.x=e.clientX;moveTouch.y=e.clientY;});canvas.addEventListener('pointermove',e=>{if(moveTouch.drag){yaw-=(e.clientX-moveTouch.x)*.004;moveTouch.x=e.clientX;moveTouch.y=e.clientY;}});canvas.addEventListener('pointerup',()=>moveTouch.drag=false);window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='e'&&(nearbyCrewId||nearbyClueId)){e.preventDefault();handleNearbyAction();}if(e.key.toLowerCase()==='m'){e.preventDefault();if(mapOpen)closeMap();else openMap();}if(e.key.toLowerCase()==='r'){e.preventDefault();triggerCrewCombo();}if(e.key==='Escape'&&activeCrewId){closeCrewDialogue();}else if(e.key==='Escape'&&mapOpen){closeMap();}if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();});window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);document.querySelectorAll('[data-move]').forEach(btn=>{const k=btn.dataset.move;btn.addEventListener('pointerdown',e=>{e.preventDefault();moveTouch[k]=true;});['pointerup','pointercancel','pointerleave'].forEach(ev=>btn.addEventListener(ev,()=>moveTouch[k]=false));});animate();}
 function resize(){if(!renderer||!camera)return;const w=$('world').clientWidth,h=$('world').clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
 
-function updateCrew(dt){cityTime+=dt;for(const member of crewMembers){if(member.userData.id===activeCrewId)continue;const target=getRoutineTarget(member.userData.id,cityTime);if(target){const delta=new THREE.Vector3(target.x-member.position.x,0,target.z-member.position.z),distance=delta.length(),moving=distance>.32;if(moving){delta.normalize();member.position.addScaledVector(delta,dt*1.12);member.rotation.y=Math.atan2(delta.x,delta.z);}const phase=member.userData.phase+=dt*(moving?7:1.5),swing=moving?Math.sin(phase)*.34:Math.sin(phase)*.025;member.userData.leftLeg.rotation.x=swing;member.userData.rightLeg.rotation.x=-swing;member.userData.leftArm.rotation.x=-swing*.72;member.userData.rightArm.rotation.x=swing*.72;}if(member.userData.assistFlash>0){member.userData.assistFlash=Math.max(0,member.userData.assistFlash-dt);member.userData.assistHalo.visible=true;member.userData.assistHalo.rotation.z+=dt*2.2;member.userData.assistHalo.scale.setScalar(1+(1-member.userData.assistFlash/.9)*.4);member.userData.assistHalo.material.opacity=Math.max(.08,member.userData.assistFlash/.9);}else member.userData.assistHalo.visible=false;}updateNearbyCrew();}
+function updateCrew(dt){
+ cityTime+=dt;
+ for(const member of crewMembers){
+  if(member.userData.id===activeCrewId)continue;
+  const life=getCrewLifeState(member.userData.id,cityTime);
+  if(life){
+   const delta=new THREE.Vector3(life.x-member.position.x,0,life.z-member.position.z);
+   const distance=delta.length();
+   const playerDistance=player?Math.hypot(player.position.x-member.position.x,player.position.z-member.position.z):Infinity;
+   const noticed=playerDistance<4.8;
+   const moving=distance>.32&&!noticed;
+   member.position.y=0;
+   if(moving){
+    delta.normalize();
+    member.position.addScaledVector(delta,Math.min(distance,dt*life.walkSpeed));
+    member.rotation.y=Math.atan2(delta.x,delta.z);
+   }else if(noticed&&player){
+    member.rotation.y=Math.atan2(player.position.x-member.position.x,player.position.z-member.position.z);
+   }
+   const phase=member.userData.phase+=dt*(moving?7:1.6);
+   const swing=moving?Math.sin(phase)*.36:Math.sin(phase*.7)*.018;
+   member.userData.leftLeg.rotation.x=swing;member.userData.rightLeg.rotation.x=-swing;
+   member.userData.head.rotation.set(0,0,0);member.userData.torso.rotation.set(0,0,0);
+   if(moving){
+    member.userData.leftArm.rotation.x=-swing*.72;member.userData.rightArm.rotation.x=swing*.72;
+    member.userData.leftArm.rotation.z=0;member.userData.rightArm.rotation.z=0;
+   }else{
+    const gesture=Math.sin(phase*1.7);
+    member.userData.leftArm.rotation.set(0,0,0);member.userData.rightArm.rotation.set(0,0,0);
+    switch(life.idlePose){
+     case 'plan':
+      member.userData.leftArm.rotation.x=-.16;member.userData.rightArm.rotation.x=-.46+gesture*.045;
+      member.userData.head.rotation.x=.1+Math.sin(phase*.8)*.025;member.userData.torso.rotation.y=Math.sin(phase*.5)*.025;break;
+     case 'scan':
+      member.userData.leftArm.rotation.x=-.08;member.userData.rightArm.rotation.x=-.2;
+      member.userData.head.rotation.y=Math.sin(phase*.55)*.18;break;
+     case 'read':
+      member.userData.leftArm.rotation.x=-.28;member.userData.rightArm.rotation.x=-.38;
+      member.userData.head.rotation.x=.2+Math.sin(phase*.8)*.02;break;
+     case 'talk':
+      member.userData.leftArm.rotation.x=-.1;member.userData.rightArm.rotation.x=-.3+gesture*.2;
+      member.userData.head.rotation.z=Math.sin(phase*.7)*.05;break;
+     case 'listen':
+      member.userData.leftArm.rotation.x=-.15;member.userData.rightArm.rotation.x=-.08;
+      member.userData.head.rotation.z=.1+Math.sin(phase*.6)*.025;member.userData.head.rotation.y=Math.sin(phase*.5)*.06;break;
+     case 'organize':
+      member.userData.leftArm.rotation.x=-.24+gesture*.13;member.userData.rightArm.rotation.x=-.24-gesture*.13;
+      member.userData.head.rotation.x=.03;break;
+     case 'train':
+      member.userData.leftArm.rotation.x=-.2+Math.sin(phase*2)*.22;member.userData.rightArm.rotation.x=-.2-Math.sin(phase*2)*.22;
+      member.position.y=Math.abs(Math.sin(phase*2))*.035;member.userData.torso.rotation.z=Math.sin(phase*2)*.025;break;
+     case 'practice':
+      member.userData.leftArm.rotation.x=-.2+Math.sin(phase*2.4)*.12;member.userData.rightArm.rotation.x=-.35+Math.sin(phase*2.4+.8)*.18;
+      member.userData.head.rotation.x=.02;break;
+     case 'social':
+      member.userData.leftArm.rotation.x=-.1;member.userData.rightArm.rotation.x=-.22+gesture*.16;
+      member.userData.head.rotation.z=Math.sin(phase*.6)*.03;break;
+    }
+   }
+   member.userData.lifeActivity=life.activity;
+  }
+  if(member.userData.assistFlash>0){
+   member.userData.assistFlash=Math.max(0,member.userData.assistFlash-dt);member.userData.assistHalo.visible=true;
+   member.userData.assistHalo.rotation.z+=dt*2.2;member.userData.assistHalo.scale.setScalar(1+(1-member.userData.assistFlash/.9)*.4);
+   member.userData.assistHalo.material.opacity=Math.max(.08,member.userData.assistFlash/.9);
+  }else member.userData.assistHalo.visible=false;
+ }
+ updateNearbyCrew();
+}
+
 
 function triggerCrewAssist(){if(playerHealth<=0||getNearbyReadyCombo())return;const candidates=crewMembers.map(member=>({member,distance:player.position.distanceTo(member.position)})).filter(item=>item.distance<=7).sort((a,b)=>a.distance-b.distance);for(const {member} of candidates){const id=member.userData.id,ability=getCrewAssist(id,saveState.crew[id],cityTime);if(!ability?.ready)continue;const targets=enemies.filter(enemy=>enemy.visible&&enemy.userData.hp>0).map(enemy=>({enemy,distance:player.position.distanceTo(enemy.position)})).filter(item=>item.distance<=7.5).sort((a,b)=>a.distance-b.distance);if(!targets.length)continue;const result=recordCrewAssist(saveState,id,cityTime);if(!result.ok)continue;const enemy=targets[0].enemy;enemy.userData.hp=Math.max(0,enemy.userData.hp+0-ability.damage);enemy.userData.stun=Math.max(enemy.userData.stun||0,ability.stun);enemy.userData.assistFlash=.72;enemy.userData.flash=0;const shove=enemy.position.clone().sub(member.position);shove.y=0;if(shove.lengthSq()<.01)shove.set(1,0,0);shove.normalize();enemy.userData.knockback.addScaledVector(shove,ability.knockback);if(ability.heal)playerHealth=Math.min(100,playerHealth+ability.heal);member.userData.assistFlash=.9;member.userData.assistHalo.visible=true;member.userData.assistHalo.scale.setScalar(.72);$('fightMessage').textContent=CREW_PROFILES[id].name.toUpperCase()+' ASSIST · '+ability.label+(ability.heal?' · +'+ability.heal+' HEALTH':' · '+ability.damage+' DAMAGE');updateCrewSummary();saveGame('crew assist');return;}}
 
