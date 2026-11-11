@@ -8,7 +8,8 @@ export const CREW_PROFILES = Object.freeze({
     memoryReplies: {
       strategy: 'You came back to the plan. I kept refining it while I walked the neighbourhood.',
       lead: 'That lead you shared is still on my board. I found one more angle worth checking.',
-      doubt: 'I remember you challenged my idea. Good. A plan that cannot survive questions is not a plan.'
+      doubt: 'I remember you challenged my idea. Good. A plan that cannot survive questions is not a plan.',
+      'signal-contained': 'You kept the signal inside the crew. I have already mapped a safer way to act on it.'
     },
     choices: [
       { id: 'ask-plan', label: 'Ask him to map the next move', hint: 'Give the strategist room to think.', delta: 8, memory: 'strategy', memoryLabel: 'You asked Milo to plan ahead', reply: 'Milo opens his notebook. Three possible routes, one clear priority. He trusts you with the unfinished version.' },
@@ -23,7 +24,8 @@ export const CREW_PROFILES = Object.freeze({
     memoryReplies: {
       people: 'You wanted to know who makes this neighbourhood tick. I have a few names for you.',
       secret: 'Your secret stayed with me. I have not repeated it, and I will not.',
-      ignored: 'Last time you brushed past my warning. I am giving you another chance to hear it.'
+      ignored: 'Last time you brushed past my warning. I am giving you another chance to hear it.',
+      'signal-broadcast': 'You let the neighbourhood hear the truth. People are already sharing what they saw.'
     },
     choices: [
       { id: 'ask-people', label: 'Ask who really runs this block', hint: 'Learn the neighbourhood through its people.', delta: 8, memory: 'people', memoryLabel: 'You asked Ria about the neighbourhood', reply: 'Ria names the people who keep the street alive: the night-shift cook, the courier, the old woman who sees everything.' },
