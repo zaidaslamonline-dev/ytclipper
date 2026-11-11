@@ -9,7 +9,8 @@ export const CREW_PROFILES = Object.freeze({
       strategy: 'You came back to the plan. I kept refining it while I walked the neighbourhood.',
       lead: 'That lead you shared is still on my board. I found one more angle worth checking.',
       doubt: 'I remember you challenged my idea. Good. A plan that cannot survive questions is not a plan.',
-      'signal-contained': 'You kept the signal inside the crew. I have already mapped a safer way to act on it.'
+      'signal-contained': 'You kept the signal inside the crew. I have already mapped a safer way to act on it.',
+      assist: 'You kept me close enough to read the fight. I know when to call the next opening now.'
     },
     choices: [
       { id: 'ask-plan', label: 'Ask him to map the next move', hint: 'Give the strategist room to think.', delta: 8, memory: 'strategy', memoryLabel: 'You asked Milo to plan ahead', reply: 'Milo opens his notebook. Three possible routes, one clear priority. He trusts you with the unfinished version.' },
@@ -25,7 +26,8 @@ export const CREW_PROFILES = Object.freeze({
       people: 'You wanted to know who makes this neighbourhood tick. I have a few names for you.',
       secret: 'Your secret stayed with me. I have not repeated it, and I will not.',
       ignored: 'Last time you brushed past my warning. I am giving you another chance to hear it.',
-      'signal-broadcast': 'You let the neighbourhood hear the truth. People are already sharing what they saw.'
+      'signal-broadcast': 'You let the neighbourhood hear the truth. People are already sharing what they saw.',
+      assist: 'I saw you take the hit. Next time, I will cut the noise before it reaches you.'
     },
     choices: [
       { id: 'ask-people', label: 'Ask who really runs this block', hint: 'Learn the neighbourhood through its people.', delta: 8, memory: 'people', memoryLabel: 'You asked Ria about the neighbourhood', reply: 'Ria names the people who keep the street alive: the night-shift cook, the courier, the old woman who sees everything.' },
@@ -40,7 +42,8 @@ export const CREW_PROFILES = Object.freeze({
     memoryReplies: {
       care: 'You checked on me last time. Nobody does that enough. I remembered.',
       training: 'You said we should train together. I found a quiet spot by the court.',
-      dismissed: 'I remember you laughed off what I said. I am not mad. Just do not mistake a joke for a lie.'
+      dismissed: 'I remember you laughed off what I said. I am not mad. Just do not mistake a joke for a lie.',
+      assist: 'That was fun. You do not have to carry every fight alone, you know.'
     },
     choices: [
       { id: 'check-in', label: 'Ask how he is really doing', hint: 'Look past the jokes for once.', delta: 9, memory: 'care', memoryLabel: 'You checked in on Bo', reply: 'Bo stops bouncing the ball. For once, he gives you the honest answer instead of the funny one.' },
@@ -48,6 +51,12 @@ export const CREW_PROFILES = Object.freeze({
       { id: 'brush-off', label: 'Laugh off his concern', hint: 'A joke can land harder than you expect.', delta: -5, memory: 'dismissed', memoryLabel: 'You brushed off Bo’s concern', reply: 'Bo laughs with you, but the smile fades a second early. He will remember that.' }
     ]
   })
+});
+
+export const CREW_ASSISTS = Object.freeze({
+  milo: Object.freeze({ threshold: 60, cooldown: 18, kind: 'mark', label: 'TACTICAL MARK', damage: 18, stun: 1.8, knockback: 0, heal: 0, color: 0x68a9ff }),
+  ria: Object.freeze({ threshold: 60, cooldown: 18, kind: 'jam', label: 'SIGNAL JAM', damage: 9, stun: 1.35, knockback: 1.2, heal: 12, color: 0x4fd5e8 }),
+  bo: Object.freeze({ threshold: 60, cooldown: 18, kind: 'rush', label: 'RIVERSIDE RUSH', damage: 26, stun: 0.7, knockback: 3.4, heal: 0, color: 0xffa85c })
 });
 
 export const CREW_IDS = Object.freeze(Object.keys(CREW_PROFILES));
@@ -63,7 +72,7 @@ export function createInitialSave(playerName = 'New Yorker') {
     playerName: cleanName(playerName),
     player: { x: 0, y: 0, z: 10, yaw: 0, health: 100 },
     cityTime: 0,
-    crew: Object.fromEntries(CREW_IDS.map(id => [id, { trust: 50, memories: [], lastMemory: null, interactions: 0 }]))
+    crew: Object.fromEntries(CREW_IDS.map(id => [id, { trust: 50, memories: [], lastMemory: null, interactions: 0, lastAssistAt: null }]))
   };
 }
 
@@ -85,7 +94,8 @@ export function normalizeSave(value) {
     normalized.crew[id] = {
       trust: clamp(entry.trust, 0, 100, 50), memories,
       lastMemory: typeof entry.lastMemory === 'string' ? entry.lastMemory.slice(0, 24) : null,
-      interactions: Math.floor(clamp(entry.interactions, 0, 1e6, 0))
+      interactions: Math.floor(clamp(entry.interactions, 0, 1e6, 0)),
+      lastAssistAt: entry.lastAssistAt == null ? null : clamp(entry.lastAssistAt, 0, 1e9, 0)
     };
   }
   return normalized;
@@ -155,4 +165,34 @@ export function getRoutineTarget(npcId, elapsedSeconds = 0) {
   const elapsed = clamp(elapsedSeconds, 0, 1e9, 0);
   const index = Math.floor(elapsed / 22) % profile.routine.length;
   return { ...profile.routine[index], index };
+}
+
+
+export function getCrewAssist(npcId, state, elapsedSeconds = 0) {
+  const ability = CREW_ASSISTS[npcId];
+  if (!ability) return null;
+  const entry = state && typeof state === 'object' ? state : {};
+  const trust = clamp(entry.trust, 0, 100, 50);
+  if (trust < ability.threshold) return null;
+  const now = clamp(elapsedSeconds, 0, 1e9, 0);
+  const lastAssistAt = entry.lastAssistAt == null ? null : clamp(entry.lastAssistAt, 0, 1e9, 0);
+  const remaining = lastAssistAt == null ? 0 : Math.max(0, ability.cooldown - (now - lastAssistAt));
+  return { ...ability, trust, ready: remaining <= 0, remaining: Math.ceil(remaining) };
+}
+
+export function recordCrewAssist(save, npcId, elapsedSeconds = 0) {
+  const entry = save?.crew?.[npcId];
+  const ability = getCrewAssist(npcId, entry, elapsedSeconds);
+  if (!entry || !ability) return { ok: false, reason: 'locked' };
+  if (!ability.ready) return { ok: false, reason: 'cooldown', remaining: ability.remaining };
+  const profile = CREW_PROFILES[npcId];
+  const at = clamp(elapsedSeconds, 0, 1e9, 0);
+  const memoryLabel = `${profile.name} backed you up during a street fight`;
+  entry.lastAssistAt = at;
+  entry.lastMemory = 'assist';
+  entry.interactions = Math.floor(clamp(entry.interactions, 0, 1e6, 0)) + 1;
+  entry.memories = Array.isArray(entry.memories) ? entry.memories : [];
+  entry.memories.push({ tag: 'assist', label: memoryLabel, at });
+  entry.memories = entry.memories.slice(-6);
+  return { ok: true, ...ability, memoryLabel, interactions: entry.interactions };
 }
