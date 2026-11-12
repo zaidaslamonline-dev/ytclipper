@@ -2,7 +2,7 @@ export const CREW_SOCIAL_KEY='stickcity-crew-social-v1';
 export const CREW_SOCIAL_CYCLE_SECONDS=66;
 export const CREW_SOCIAL_LONG_CYCLE_SECONDS=198;
 const WALK_SPEEDS=Object.freeze({milo:1.18,ria:1.28,bo:1.46});
-const PAIRS=Object.freeze([{id:'milo|ria',members:['milo','ria']},{id:'milo|bo',members:['milo','bo']},{id:'bo|ria',members:['bo','ria']}]);
+const PAIRS=Object.freeze([{id:'milo|ria',members:['milo','ria']},{id:'bo|milo',members:['milo','bo']},{id:'bo|ria',members:['bo','ria']}]);
 const SCENES=Object.freeze([
 {id:'newsstand-debrief',period:66,start:26,end:42,pair:['milo','ria'],place:'Newsstand',label:'NEWSSTAND DEBRIEF',bondDelta:2,memoryLabel:'Milo and Ria compared neighbourhood intelligence at the newsstand',activity:{milo:'COMPARING STREET INTELLIGENCE',ria:'SHARING WHAT THE BLOCK HEARD'},description:{milo:'Comparing patrol notes with Ria away from the player',ria:'Sharing neighbourhood rumours and checking Milo’s map'},pose:{milo:'plan',ria:'listen'},targets:{milo:{x:-4.1,z:2.1},ria:{x:-5.35,z:2.1}}},
 {id:'diner-check-in',period:66,start:46,end:64,pair:['ria','bo'],place:'Corner Diner',label:'DINER CHECK-IN',bondDelta:1,memoryLabel:'Ria and Bo checked in with each other after a rough shift',activity:{ria:'CHECKING IN WITH BO',bo:'TELLING RIA ABOUT THE COURT'},description:{ria:'Making sure Bo is doing more than hiding behind jokes',bo:'Catching Ria up on training and the neighbourhood'},pose:{ria:'listen',bo:'social'},targets:{ria:{x:4.4,z:9.8},bo:{x:5.7,z:9.8}}},
