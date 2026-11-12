@@ -127,7 +127,7 @@
 <div class="signal-choices"><button class="signal-choice" id="aftermathChoiceA"><strong>Protect the witness</strong><small>Keep the courier safe.</small></button><button class="signal-choice" id="aftermathChoiceB"><strong>Publish the receipt</strong><small>Give the block proof.</small></button></div>
 </section>
 <section class="signal-ending antagonist-panel" id="antagonistPanel" aria-label="The Switchboard encounter" aria-live="polite" aria-hidden="true">
-<div class="map-kicker" id="antagonistKicker">UNREGISTERED OPERATOR</div><h2 id="antagonistTitle">THE SWITCHBOARD</h2><p id="antagonistText"></p>
+<div class="dialogue-top"><div><div class="map-kicker" id="antagonistKicker">UNREGISTERED OPERATOR</div><h2 id="antagonistTitle">THE SWITCHBOARD</h2></div><button class="dialogue-close" id="antagonistClose" type="button" aria-label="Close encounter">×</button></div><p id="antagonistText"></p>
 <div class="dialogue-activity" id="antagonistActivity"></div><div class="dialogue-meta"><span id="antagonistMemory"></span><strong id="antagonistStats"></strong></div>
 <div class="signal-choices" id="antagonistChoices"></div>
 </section>
@@ -159,7 +159,7 @@ function startGame(useSaved=false){if(useSaved){saveState=loadSave(storage)||cre
 updateContinueButton();updateCrewSummary();
 $('playButton').addEventListener('click',()=>startGame(false));
 $('continueButton').addEventListener('click',()=>startGame(true));
-$('backButton').addEventListener('click',()=>{saveGame('menu');closeCrewDialogue();closeAntagonistEncounter();$('world').classList.remove('active');$('home').style.display='block';});
+$('backButton').addEventListener('click',()=>{saveGame('menu');closeCrewDialogue();closeAntagonistEncounter();$('world').classList.remove('active');$('home').style.display='block';});$('antagonistClose').addEventListener('click',closeAntagonistEncounter);
 $('saveButton').addEventListener('click',()=>saveGame('checkpoint'));
 $('talkButton').addEventListener('click',handleNearbyAction);
 $('mapButton').addEventListener('click',openMap);
