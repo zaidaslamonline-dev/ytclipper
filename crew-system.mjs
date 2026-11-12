@@ -132,8 +132,8 @@ export function getCrewDialogue(id, state) {
   const entry = state && typeof state === 'object' ? state : {};
   const trust = clamp(entry.trust, 0, 100, 50);
   const lastMemory = typeof entry.lastMemory === 'string' ? entry.lastMemory : null;
-  const memory = profile.memoryReplies[lastMemory];
   const lastLabel = Array.isArray(entry.memories) ? entry.memories.at(-1)?.label : '';
+  const memory = profile.memoryReplies[lastMemory] || (lastLabel ? 'I remember: ' + lastLabel + '. It still matters.' : null);
   return {
     greeting: memory || profile.firstGreeting,
     memoryLine: lastLabel ? 'REMEMBERS: ' + lastLabel : 'NO SHARED HISTORY YET',
