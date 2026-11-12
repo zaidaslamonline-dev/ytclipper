@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  SAVE_KEY, createInitialSave, getCrewDialogue, getRelationshipLabel,
-  getRoutineTarget, loadSave, persistSave, recordCrewChoice
+  SAVE_KEY, createInitialSave, getCrewAssist, getCrewDialogue, getRelationshipLabel,
+  getRoutineTarget, loadSave, persistSave, recordCrewAssist, recordCrewChoice
 } from '../crew-system.mjs';
 
 function memoryStorage() {
