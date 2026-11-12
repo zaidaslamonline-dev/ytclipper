@@ -1,0 +1,23 @@
+name: STICKCITY regression checks
+on:
+  push:
+    branches:
+      - stickcity/initial-prototype
+  pull_request:
+    branches:
+      - stickcity/initial-prototype
+jobs:
+  node-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Syntax-check game modules
+        run: |
+          for file in *.mjs tests/*.test.mjs; do node --check "$file"; done
+          node -e "const fs=require('node:fs');const html=fs.readFileSync('index.html','utf8');const match=html.match(/<script type=\"module\">([\\s\\S]*?)<\\/script>/);if(!match)throw new Error('Missing game module');fs.writeFileSync('/tmp/stickcity-entry.mjs',match[1]);"
+          node --check /tmp/stickcity-entry.mjs
+      - name: Run all regression tests
+        run: node --test tests/*.test.mjs
