@@ -123,3 +123,15 @@ test('normalization drops impossible choice states and unknown branch values', (
     version: 1, branch: null, clueCollected: false, choice: null
   });
 });
+
+test('a pending follow-up decision survives reload with both choices available', () => {
+  const storage = memoryStorage();
+  let state = unlockAftermath(createInitialAftermathState(), 'broadcast');
+  state = collectAftermathClue(state, 'witness-cache').state;
+  assert.equal(persistAftermathState(storage, state), true);
+  const restored = loadAftermathState(storage);
+  assert.equal(restored.clueCollected, true);
+  assert.equal(restored.choice, null);
+  assert.equal(getAftermathPresentation(restored).choices.length, 2);
+  assert.match(getAftermathSummary(restored), /DECISION READY/);
+});
